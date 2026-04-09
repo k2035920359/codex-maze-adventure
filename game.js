@@ -896,6 +896,8 @@ function setupStage(stageNumber) {
 }
 
 function restartCurrentStage() {
+  player.health = player.maxHealth; // 重置血量
+  player.defeatTimer = 0;           // 清除死亡動畫計時
   if (stagePhase === "boss") {
     beginBossFight();
     overlay.classList.add("hidden");
@@ -945,12 +947,18 @@ function beginBossFight() {
   player.y = 340;
   player.vx = 0;
   player.vy = 0;
+
+  // 重置玩家受傷狀態，避免死掉重來後立刻被判斷死亡
+  player.health = player.maxHealth; 
+  player.defeatTimer = 0;
+
   player.hitEnemies.clear();
   player.attackTimer = 0;
   player.attackStage = 0;
   player.queuedAttack = false;
   player.invincibleTimer = 0;
   cameraX = clamp(player.x - WIDTH * 0.38, 0, getActiveWorldWidth() - WIDTH);
+  state = "playing";
 }
 
 function setOverlay(title, text, buttonText = "Try Again") {
